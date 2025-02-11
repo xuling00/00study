@@ -18,7 +18,7 @@
 4. [排序](https://blog.csdn.net/m0_46979525/article/details/135566442?spm=1001.2014.3001.5501)
 
 ### Problem Solution
-1. [hot 100]()
+1. [hot 100](https://github.com/xuling00/00study/blob/main/hot100.md)
 2. [晴问](https://blog.csdn.net/m0_46979525/article/details/135545665?spm=1001.2014.3001.5501)
 
 ### Dataset

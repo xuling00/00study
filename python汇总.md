@@ -82,105 +82,149 @@
 
 ## 三、基础技术
 
-1. 比较
-   使用字典序。
-   可以用字典去统计每个元素的出现次数，然后去返回最大值和其下标。
+### 1. 比较
 
-   ```python
-   max((tab[i],i) for i in range(len(tab)))
+使用字典序。
 
-   # 例如
-   def majority(L):
-   	compute = {}
-   	for word in L:
-   		if word in compute:
-   			compute[word] += 1
-   		else:
-   			compute[word] = 1
-   	valmin,argmin = min((-compute[word],word) for word in compute)
-   	return valmin,argmin
-   ```
-2. 排序
+可以用字典去统计每个元素的出现次数，然后去返回最大值和其下标。
 
-   用sort（）或者sorted（）。
+```python
+max((tab[i],i) for i in range(len(tab)))
 
-   前者直接修改，后者会反悔相关列表一个排好序的副本。可以配合比较一起使用。
+# 例如
+def majority(L):
+	compute = {}
+	for word in L:
+		if word in compute:
+			compute[word] += 1
+		else:
+			compute[word] = 1
+	valmin,argmin = min((-compute[word],word) for word in compute)
+	return valmin,argmin
+```
 
-   ```python
-   list.sort(cmp=None, key=None, reverse=False)
+### 2. 排序
 
-   # 用法
-   cmp -- 可选参数, 如果指定了该参数会使用该参数的方法进行排序。
-   key -- 主要是用来进行比较的元素，只有一个参数，具体的函数的参数就是取自于可迭代对象中，指定可迭代对象中的一个元素来进行排序。
-   reverse -- 排序规则，reverse = True 降序， reverse = False 升序（默认）。
+用sort（）或者sorted（）。
 
-   # 使用
-   ## 获取列表的第二个元素
-   def takeSecond(elem):
-       return elem[1]
+前者直接修改，后者会反悔相关列表一个排好序的副本。可以配合比较一起使用。
 
-   ## 列表
-   random = [(2, 2), (3, 4), (4, 1), (1, 3)]
+```python
+list.sort(cmp=None, key=None, reverse=False)
 
-   ## 指定第二个元素排序
-   random.sort(key=takeSecond)
+# 用法
+cmp -- 可选参数, 如果指定了该参数会使用该参数的方法进行排序。
+key -- 主要是用来进行比较的元素，只有一个参数，具体的函数的参数就是取自于可迭代对象中，指定可迭代对象中的一个元素来进行排序。
+reverse -- 排序规则，reverse = True 降序， reverse = False 升序（默认）。
 
-   ## 输出类别
-   print('排序列表：')
-   print(random)
+# 使用
+## 获取列表的第二个元素
+def takeSecond(elem):
+    return elem[1]
 
-   ## 输出
-   排序列表：
-   [(4, 1), (2, 2), (1, 3), (3, 4)]
-   ```
-3. 扫描
+## 列表
+random = [(2, 2), (3, 4), (4, 1), (1, 3)]
 
-   从左到右地遍历输入元素，并对每个遇到的元素进行特定处理。
-4. 贪婪
+## 指定第二个元素排序
+random.sort(key=takeSecond)
 
-   在寻找解决方案的每个步骤中都选择了一个让局部结果最大化的参数
-5. 动态规划
+## 输出类别
+print('排序列表：')
+print(random)
 
-   把问题分解为若干子问题，并基于子问题的解决方案找到原始问题的最优解。
-6. 整数编码集合
-7. 二分
+## 输出
+排序列表：
+[(4, 1), (2, 2), (1, 3), (3, 4)]
+```
 
-   建立中间值。
+### 3. 前缀和
 
-   两种书写方法：
+前缀和可以简单地理解为数组的前 i 个元素的和，当然其具体可以应用在一维以及二维的数组中：
 
-   ```python
-   #左闭右闭
-   class Solution:
-       def search(self, nums: List[int], target: int) -> int:
-           left, right = 0, len(nums) - 1  # 定义target在左闭右闭的区间里，[left, right]
+* 快速求数组前 i 项之和
+* 快速求数组的 [i,j] 范围内的和
+* 快速求二维矩阵中某个子矩阵之和
 
-           while left <= right:
-               middle = left + (right - left) // 2
+```python
+class Solution:
+    def runningSum(self, nums: List[int]) -> List[int]:
+        n = len(nums)
+        psum = [0]*(n+1)
+        cur_sum = 0
+        for i in range(n):
+            cur_sum+=nums[i]
+            psum[i+1]=cur_sum
+        return psum
+```
 
-               if nums[middle] > target:
-                   right = middle - 1  # target在左区间，所以[left, middle - 1]
-               elif nums[middle] < target:
-                   left = middle + 1  # target在右区间，所以[middle + 1, right]
-               else:
-                   return middle  # 数组中找到目标值，直接返回下标
-           return -1  # 未找到目标值
+前缀和的前缀和数组创立，时间复杂度降为 O(n)。注意这里psum的第一项填充0，是为了方便后面区间和的求解统一。
 
-   # 左闭右开
-   class Solution:
-       def search(self, nums: List[int], target: int) -> int:
-           left, right = 0, len(nums)  # 定义target在左闭右开的区间里，即：[left, right)
+区间和的求法可以建立在前缀和基础上。
 
-           while left < right:  # 因为left == right的时候，在[left, right)是无效的空间，所以使用 <
-               middle = left + (right - left) // 2
+对于前缀和数组的任一项有：`psum[i] = psum[i-1] + nums[i-1]`，此时只需谨记前缀和数组的下标与原数组下标不是直接对应，而是加一对应。即 psum[i] 表示 nums 前 i-1 项的，不包含当前元素 nums[i]。
 
-               if nums[middle] > target:
-                   right = middle  # target 在左区间，在[left, middle)中
-               elif nums[middle] < target:
-                   left = middle + 1  # target 在右区间，在[middle + 1, right)中
-               else:
-                   return middle  # 数组中找到目标值，直接返回下标
-           return -1  # 未找到目标值
-   ```
+那么，对于任意 i<=j<len(nums) ，数组 [i,j] 区间和公式：
+
+```python
+sum(i, j) = psum[j + 1] - psum[i]
+```
+
+ 何时使用前缀和算法？
+
+当题目中涉及 **区间和** ，前缀和为首选解决方案，子数组即为数组的区间表示。通常对于连续子数组的处理为双指针和滑动窗口，但当没有明确的指针移动判断条件时，可以尝试使用前缀和算法。
+
+拓展学习：https://www.cnblogs.com/ZghzzZyu/p/16407303.html
+
+### 4. 二分
+
+建立中间值。
+
+两种书写方法：
+
+```python
+#左闭右闭
+class Solution:
+    def search(self, nums: List[int], target: int) -> int:
+        left, right = 0, len(nums) - 1  # 定义target在左闭右闭的区间里，[left, right]
+
+        while left <= right:
+            middle = left + (right - left) // 2
+
+            if nums[middle] > target:
+                right = middle - 1  # target在左区间，所以[left, middle - 1]
+            elif nums[middle] < target:
+                left = middle + 1  # target在右区间，所以[middle + 1, right]
+            else:
+                return middle  # 数组中找到目标值，直接返回下标
+        return -1  # 未找到目标值
+
+# 左闭右开
+class Solution:
+    def search(self, nums: List[int], target: int) -> int:
+        left, right = 0, len(nums)  # 定义target在左闭右开的区间里，即：[left, right)
+
+        while left < right:  # 因为left == right的时候，在[left, right)是无效的空间，所以使用 <
+            middle = left + (right - left) // 2
+
+            if nums[middle] > target:
+                right = middle  # target 在左区间，在[left, middle)中
+            elif nums[middle] < target:
+                left = middle + 1  # target 在右区间，在[middle + 1, right)中
+            else:
+                return middle  # 数组中找到目标值，直接返回下标
+        return -1  # 未找到目标值
+```
+
+### 5.. 扫描
+
+从左到右地遍历输入元素，并对每个遇到的元素进行特定处理。
+
+### 6. 贪婪
+
+在寻找解决方案的每个步骤中都选择了一个让局部结果最大化的参数
+
+### 7. 动态规划
+
+把问题分解为若干子问题，并基于子问题的解决方案找到原始问题的最优解。
 
 ## 四、字符串操作

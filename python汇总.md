@@ -229,7 +229,6 @@ class Solution:
 
 ## 四、字符串操作
 
-
 ## 五、链表
 
 定义链表：
@@ -263,7 +262,7 @@ class Solution:
     def removeElements(self, head: Optional[ListNode], val: int) -> Optional[ListNode]:
         # 创建虚拟头部节点以简化删除过程
         dummy_head = ListNode(next = head)
-    
+  
         # 遍历列表并删除值为val的节点
         current = dummy_head
         while current.next:
@@ -271,11 +270,9 @@ class Solution:
                 current.next = current.next.next
             else:
                 current = current.next
-    
+  
         return dummy_head.next
 ```
-
-
 
 * get(index)：获取链表中第 index 个节点的值。如果索引无效，则返回-1。
 * addAtHead(val)：在链表的第一个元素之前添加一个值为 val 的节点。插入后，新节点将成为链表的第一个节点。
@@ -289,7 +286,7 @@ class ListNode:
     def __init__(self, val=0, next=None):
         self.val = val
         self.next = next
-    
+  
 class MyLinkedList:
     def __init__(self):
         self.dummy_head = ListNode()
@@ -298,11 +295,11 @@ class MyLinkedList:
     def get(self, index: int) -> int:
         if index < 0 or index >= self.size:
             return -1
-    
+  
         current = self.dummy_head.next
         for i in range(index):
             current = current.next
-        
+      
         return current.val
 
     def addAtHead(self, val: int) -> None:
@@ -319,7 +316,7 @@ class MyLinkedList:
     def addAtIndex(self, index: int, val: int) -> None:
         if index < 0 or index > self.size:
             return
-    
+  
         current = self.dummy_head
         for i in range(index):
             current = current.next
@@ -329,7 +326,7 @@ class MyLinkedList:
     def deleteAtIndex(self, index: int) -> None:
         if index < 0 or index >= self.size:
             return
-    
+  
         current = self.dummy_head
         for i in range(index):
             current = current.next
@@ -366,7 +363,7 @@ class MyLinkedList:
     def get(self, index: int) -> int:
         if index < 0 or index >= self.size:
             return -1
-    
+  
         if index < self.size // 2:
             current = self.head
             for i in range(index):
@@ -375,7 +372,7 @@ class MyLinkedList:
             current = self.tail
             for i in range(self.size - index - 1):
                 current = current.prev
-            
+          
         return current.val
 
     def addAtHead(self, val: int) -> None:
@@ -399,7 +396,7 @@ class MyLinkedList:
     def addAtIndex(self, index: int, val: int) -> None:
         if index < 0 or index > self.size:
             return
-    
+  
         if index == 0:
             self.addAtHead(val)
         elif index == self.size:
@@ -421,7 +418,7 @@ class MyLinkedList:
     def deleteAtIndex(self, index: int) -> None:
         if index < 0 or index >= self.size:
             return
-    
+  
         if index == 0:
             self.head = self.head.next
             if self.head:
@@ -456,4 +453,16 @@ class MyLinkedList:
 # obj.addAtTail(val)
 # obj.addAtIndex(index,val)
 # obj.deleteAtIndex(index)
+```
+
+
+遍历链表的方式：
+
+```python
+# 找到第n个
+for i in range(n):
+	cur = cur.next
+# 遍历
+while(cur):
+	cur = cur.next
 ```
